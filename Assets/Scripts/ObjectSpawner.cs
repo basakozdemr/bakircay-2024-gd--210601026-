@@ -4,30 +4,48 @@ using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour
 {
-    
-    public GameObject objectPrefab; // Oluþturulacak nesnenin prefabý
-    public int pairCount = 25; // Çift sayýsý
-    public Vector3 spawnArea = new Vector3(3, 0, 3); // Spawn alaný boyutlarý
 
-    void Start()
+    public GameObject[] meyvePrefabs; // Meyve prefablarý
+    public int toplamMeyveSayisi = 20; // Toplam meyve sayýsý (2x10 = 20)
+    public float spawnHeight = 10f; // Meyvelerin spawn yüksekliði
+    public float spawnAreaWidth = 10f; // Spawn alanýnýn geniþliði
+    public float spawnAreaHeight = 10f; // Spawn alanýnýn yüksekliði
+
+    private void Start()
     {
-        for (int i = 1; i <= pairCount; i++) // Her çift için döngü
+        SpawnMeyveler();
+    }
+
+    void SpawnMeyveler()
+    {
+        // Meyve türlerinin her birinden 2 adet olacak þekilde spawn et
+        List<int> meyveIndeksleri = new List<int>();
+
+        // Her meyve türünden 2 adet oluþtur
+        for (int i = 0; i < meyvePrefabs.Length; i++)
         {
-            for (int j = 0; j < 2; j++) // Her çiftin 2 adet nesnesi
-            {
-                // Rastgele bir konum belirle
-                Vector3 randomPosition = new Vector3(
-                    Random.Range(-spawnArea.x, spawnArea.x),
-                    spawnArea.y,
-                    Random.Range(-spawnArea.z, spawnArea.z)
-                );
+            meyveIndeksleri.Add(i);
+            meyveIndeksleri.Add(i); // Her meyveden 2 tane olacak þekilde ekle
+        }
 
-                // Nesne oluþtur
-                GameObject newObject = Instantiate(objectPrefab, randomPosition, Quaternion.identity);
+        // Toplamda 20 meyve spawn etmek için döngü
+        for (int i = 0; i < toplamMeyveSayisi; i++)
+        {
+            // Rastgele bir meyve türü seç
+            int randomIndex = Random.Range(0, meyveIndeksleri.Count);
+            int meyveIndex = meyveIndeksleri[randomIndex];
 
-                // Nesneye ID atama
-                newObject.GetComponent<Objects>().objectID = i;
-            }
+            // Seçilen meyve türünden bir prefab seç
+            GameObject meyvePrefab = meyvePrefabs[meyveIndex];
+
+            // Rastgele bir spawn pozisyonu belirle
+            Vector3 spawnPosition = new Vector3 (Random.Range(-3, 3), 6, Random.Range(-3, 3));
+
+            // Meyve prefab'ýný spawn et
+            Instantiate(meyvePrefab, spawnPosition, Quaternion.identity);
+
+            // Seçilen meyve türünü listeden çýkar
+            meyveIndeksleri.RemoveAt(randomIndex);
         }
     }
 }
