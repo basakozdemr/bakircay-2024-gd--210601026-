@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class DragAndDrop : MonoBehaviour
 {
-
     private Camera cam;
     private Rigidbody rb;
     private bool isDragging = false;
     private Vector3 targetPosition;
-    private float liftHeight = 2f; // Havaya kaldýrma yüksekliði
+    private float liftHeight = 5f; // Havaya kaldýrma yüksekliði
     private float smoothSpeed = 15f; // Lerp hýzýný kontrol eden deðer
 
     private void Start()
@@ -59,6 +58,9 @@ public class DragAndDrop : MonoBehaviour
         mousePoint.z = cam.WorldToScreenPoint(transform.position).z;
         return cam.ScreenToWorldPoint(mousePoint);
     }
+
+
+
 
 
 }
