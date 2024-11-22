@@ -34,7 +34,7 @@ public class ObjectSpawner : MonoBehaviour
 
             GameObject meyvePrefab = meyvePrefabs[meyveIndex];
 
-            Vector3 spawnPosition = new Vector3 (Random.Range(-4, 4), Random.Range(1,6), Random.Range(-1, 12));
+            Vector3 spawnPosition = new Vector3 (Random.Range(-6, 6), Random.Range(1,6), Random.Range(0, 12));
 
             Instantiate(meyvePrefab, spawnPosition, Quaternion.identity);
 
