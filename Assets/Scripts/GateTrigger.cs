@@ -4,54 +4,36 @@ using UnityEngine;
 
 public class GateTrigger : MonoBehaviour
 {
-    public Transform snapPosition; // Nesnenin taþýnacaðý hedef pozisyon
-    private bool isSnapped = false; // Nesnenin sabitlenip sabitlenmediðini kontrol et
+    public Transform centerPoint; 
+    private GameObject currentObject; 
 
     private void OnTriggerEnter(Collider other)
     {
-        // Sadece "Draggable" tag'ýna sahip nesneleri iþle
         if (other.CompareTag("Draggable"))
         {
-            // Nesneyi sabitle
-            other.transform.position = snapPosition.position;
-            other.transform.rotation = snapPosition.rotation;
-
-            // Fiziksel etkileri sýfýrla (Rigidbody varsa)
-            Rigidbody rb = other.GetComponent<Rigidbody>();
-            if (rb != null)
+            if (currentObject == null)
             {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true; // Fiziksel etkileþimleri geçici olarak devre dýþý býrak
+                currentObject = other.gameObject;
+                currentObject.transform.position = Vector3.Lerp(transform.position, centerPoint.position, Time.deltaTime * 1);
+                currentObject.GetComponent<Rigidbody>().velocity = Vector3.zero; 
             }
-
-            isSnapped = true; // Nesne sabitlendi
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        // Nesne hala trigger alanýnda, pozisyonunu sürekli güncelle
-        if (other.CompareTag("Draggable") && isSnapped)
-        {
-            other.transform.position = snapPosition.position;
-            other.transform.rotation = snapPosition.rotation;
+            else
+            {
+                Rigidbody rb = other.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Vector3 forceDirection = (other.transform.position - transform.position).normalized;
+                    rb.AddForce(forceDirection * 1000f);
+                }
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // Nesne trigger alanýndan çýkarsa, sabitlemeyi kaldýr
-        if (other.CompareTag("Draggable"))
+        if (other.gameObject == currentObject)
         {
-            isSnapped = false;
-
-            // Nesneyi serbest býrak
-            Rigidbody rb = other.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = false; // Fiziksel etkileþimleri tekrar aktif et
-            }
+            currentObject = null;
         }
     }
 }

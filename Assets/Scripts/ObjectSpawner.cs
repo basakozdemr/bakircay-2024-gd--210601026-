@@ -21,30 +21,23 @@ public class ObjectSpawner : MonoBehaviour
         // Meyve türlerinin her birinden 2 adet olacak þekilde spawn et
         List<int> meyveIndeksleri = new List<int>();
 
-        // Her meyve türünden 2 adet oluþtur
         for (int i = 0; i < meyvePrefabs.Length; i++)
         {
             meyveIndeksleri.Add(i);
-            meyveIndeksleri.Add(i); // Her meyveden 2 tane olacak þekilde ekle
+            meyveIndeksleri.Add(i);
         }
 
-        // Toplamda 20 meyve spawn etmek için döngü
         for (int i = 0; i < toplamMeyveSayisi; i++)
         {
-            // Rastgele bir meyve türü seç
             int randomIndex = Random.Range(0, meyveIndeksleri.Count);
             int meyveIndex = meyveIndeksleri[randomIndex];
 
-            // Seçilen meyve türünden bir prefab seç
             GameObject meyvePrefab = meyvePrefabs[meyveIndex];
 
-            // Rastgele bir spawn pozisyonu belirle
-            Vector3 spawnPosition = new Vector3 (Random.Range(-3, 3), 6, Random.Range(-3, 3));
+            Vector3 spawnPosition = new Vector3 (Random.Range(-4, 4), Random.Range(1,6), Random.Range(-1, 12));
 
-            // Meyve prefab'ýný spawn et
             Instantiate(meyvePrefab, spawnPosition, Quaternion.identity);
 
-            // Seçilen meyve türünü listeden çýkar
             meyveIndeksleri.RemoveAt(randomIndex);
         }
     }
