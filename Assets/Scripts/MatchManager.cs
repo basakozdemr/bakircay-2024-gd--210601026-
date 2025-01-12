@@ -80,7 +80,7 @@ public class MatchManager : MonoBehaviour
             if (GameManager.Instance != null)
             {
                 UnityEngine.Debug.Log("obje say�s� ::: " + GameObject.FindGameObjectsWithTag("Draggable").Length);
-                GameManager.Instance.AddScore(10);
+                GameManager.Instance.AddScore(50);
             }
             else
             {
