@@ -1,36 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Diagnostics;
 using UnityEngine;
 
-public class GateTrigger : MonoBehaviour
+public class PlacementArea : MonoBehaviour
 {
-    public Transform centerPoint; 
-    private GameObject currentObject; 
+    // Yerle�tirme alan�ndaki mevcut nesne
+    private GameObject currentObject =null;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Draggable"))
+        UnityEngine.Debug.Log("OnTriggerEnter");
+
+        // E�er yerle�tirme alan�nda bir obje varsa
+        if (currentObject != null)
         {
-            if (currentObject == null)
+            UnityEngine.Debug.Log("obje var");
+            UnityEngine.Debug.Log(currentObject);
+
+            // Yeni gelen obje e�le�iyor mu?
+            if (currentObject.tag == other.tag)
             {
-                currentObject = other.gameObject;
-                currentObject.transform.position = Vector3.Lerp(transform.position, centerPoint.position, Time.deltaTime * 1);
-                currentObject.GetComponent<Rigidbody>().velocity = Vector3.zero; 
+               
             }
             else
             {
+                UnityEngine.Debug.Log("e�le�miyorsa geri f�rlat");
+                // E�le�miyorsa objeyi geri f�rlat
                 Rigidbody rb = other.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
                     Vector3 forceDirection = (other.transform.position - transform.position).normalized;
-                    rb.AddForce(forceDirection * 1000f);
+                    rb.AddForce(forceDirection * 500f); // Daha kontrollü bir kuvvet
                 }
             }
         }
+        else
+        {
+            // E�er yerle�tirme alan� bo�sa, objeyi yerle�tir
+            currentObject = other.gameObject;
+            other.transform.position = transform.position;
+            other.GetComponent<Rigidbody>().isKinematic = true;
+        }
     }
-
     private void OnTriggerExit(Collider other)
     {
+        // E�er obje alan� terk ederse, currentObject null yap
         if (other.gameObject == currentObject)
         {
             currentObject = null;
